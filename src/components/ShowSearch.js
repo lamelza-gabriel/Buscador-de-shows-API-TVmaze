@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import ShowForm from "./ShowForm";
+import ShowInfo from "./ShowInfo";
+import Loader from "./Loader";
+//import { helpHttp } from "./helpHttps";
+import ShowSearchStyles from "../estilos/ShowSearch.scss";
 
 const ShowSearch = () => {
 	//ESTADOS
 	const [loader, setLoader] = useState(false);
 	const [search, setSearch] = useState(null);
-	const [shows, setShows] = useState(null);
+	const [mostrarShows, setMostrarShows] = useState("");
 
 	//useEffect que dispara la la peticion fetch, pero tendremos un btn que disparará el cambio en el estado search, que es la dependencia de este useEffect
 	useEffect(() => {
@@ -13,12 +17,11 @@ const ShowSearch = () => {
 
 		//haciendo peticion fetch a los datos
 		const fetchData = async () => {
-			const busqueda = search;
+			const shows = search;
 
 			//URL API
-			let UrlApi = `https://api.tvmaze.com/search/shows?q=${busqueda}`;
+			let UrlApi = `https://api.tvmaze.com/search/shows?q=${shows}`;
 
-			//mostrar loader
 			setLoader(true);
 
 			//peticion fetch y paso de datos a formato json
@@ -28,16 +31,23 @@ const ShowSearch = () => {
 			if (json.length === 0) {
 				alert("No hay resultados");
 			} else {
+				/*
 				json.forEach((element) => {
 					console.log(element);
 				});
+				*/
 			}
+			//console.log(json)
+			//en json viene la data, debemos guardar esos datos en algun estado para poder mandarlo a showInfo
+			setMostrarShows(json);
+			setLoader(false);
 		};
-		fetchData()
+		fetchData();
 	}, [search]);
 
-	const handleClick = () => {
-		setSearch("Breaking Bad");
+	const manejarDatos = (datos) => {
+		//console.log(datos)
+		setSearch(datos);
 	};
 
 	return (
@@ -63,8 +73,9 @@ const ShowSearch = () => {
 					</ul>
 				</nav>
 			</header>
-			<button onClick={handleClick}>Click Me!</button>
-			<ShowForm></ShowForm>
+			<ShowForm manejarDatos={manejarDatos}></ShowForm>
+			{loader && <Loader></Loader>}
+			<ShowInfo mostrarShows={mostrarShows}></ShowInfo>
 		</>
 	);
 };

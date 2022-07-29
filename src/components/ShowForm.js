@@ -1,33 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
+import ShowFormStyles from "../estilos/ShowForm.scss";
 
-const ShowForm = () => {
+const ShowForm = ({ manejarDatos }) => {
+	const [search2, setSearch2] = useState("");
+	//console.log(search2)
+
+	//submit del form
+	const manejarSubmit = (e) => {
+		e.preventDefault();
+		//console.log("hola mi rey");
+		//console.log(search2);
+		manejarDatos(search2);
+	};
+
 	return (
 		<main>
 			<h1>Buscador de shows de TV</h1>
 			<div className='search-container'>
-				<input type='search' id='searchInput' />
-				<button className='search-btn' id='searchBtn'>
-					Buscar
-				</button>
-				<p className='thanks-text'>
-					Esto es posible gracias a la API de
-					<a target='_blank' href='https://www.tvmaze.com/api'>
-						TV Maze
-					</a>
-				</p>
+				<form onSubmit={manejarSubmit}>
+					<input
+						placeholder="Ingrese un show a buscar"
+						className='input'
+						type='text'
+						name='shows'
+						onChange={(event) => setSearch2(event.target.value)}
+					/>
+					<input className='search-btn' type='submit' value='Buscar' />
+				</form>
 			</div>
-
-			<section className='shows' id='shows'></section>
-
-			<template id='template'>
-				<article>
-					<h3></h3>
-					<div></div>
-					<img />
-					<br />
-					<a></a>
-				</article>
-			</template>
+			<p className='thanks-text'>
+				Esto es posible gracias a la API de
+				<a target='_blank' href='https://www.tvmaze.com/api'>
+					TV Maze
+				</a>
+			</p>
 		</main>
 	);
 };
